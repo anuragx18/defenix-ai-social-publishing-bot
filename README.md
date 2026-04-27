@@ -2,7 +2,7 @@
 
 ![Defenix AI Social Publishing Bot](assets/defenix-social-publishing-overview-v2.png)
 
-AI-powered, human-approved social publishing workflow built with **n8n**, **Telegram**, **LinkedIn**, and **Facebook Graph API**.
+AI-powered, human-approved social publishing workflow built with **n8n**, **Telegram**, **LinkedIn Posts API**, and **Facebook Graph API**.
 
 This project turns Telegram into a lightweight content command center: generate AI drafts, review them, regenerate when needed, and publish approved posts directly to LinkedIn or Facebook.
 
@@ -12,11 +12,11 @@ This project turns Telegram into a lightweight content command center: generate 
 
 Social media publishing often becomes a messy manual process:
 
-- generate content in one tool
-- copy it into another platform
-- edit it again
-- switch between LinkedIn and Facebook
-- manually track what was approved or posted
+- generating content in one tool
+- copying it into another platform
+- editing it again
+- switching between LinkedIn and Facebook
+- manually tracking what was approved or posted
 
 This workflow solves that by creating a simple approval-based publishing system where AI helps with drafting, but the user stays in control before anything goes live.
 
@@ -36,20 +36,35 @@ The user starts the bot, chooses a platform, selects a content type, reviews the
 
 ![System Architecture](assets/architecture-v2.png)
 
-The system is split into two workflows:
+The project is split into two connected workflows:
 
-1. **Telegram Intake & Publishing Workflow**
-   - Handles Telegram callbacks
-   - Routes platform and content-type selections
-   - Preserves platform context
-   - Handles approve / regenerate / cancel
-   - Publishes to LinkedIn or Facebook
+### 1. Telegram Intake & Publishing Workflow
 
-2. **AI Draft Generator Workflow**
-   - Fetches approved Defenix source content
-   - Extracts and cleans text
-   - Generates a platform-specific draft
-   - Returns the draft to the Telegram workflow
+This is the main workflow. It handles the user-facing Telegram experience and publishing logic.
+
+It manages:
+
+- Telegram trigger events
+- callback button routing
+- platform selection
+- content type selection
+- draft preview
+- approve / regenerate / cancel actions
+- LinkedIn publishing
+- Facebook Page publishing
+- post-publish confirmation messages
+
+### 2. AI Draft Generator Workflow
+
+This workflow generates the actual post draft.
+
+It handles:
+
+- fetching approved Defenix source content
+- extracting and cleaning webpage text
+- preparing the AI prompt
+- generating a platform-specific post
+- returning the draft to the Telegram workflow
 
 ---
 
@@ -80,19 +95,13 @@ Approved posts are published directly to the selected platform using official AP
 ## What it does
 
 - Starts from Telegram
-- Lets the user choose:
-  - platform
-  - content type
+- Lets the user choose a platform
+- Lets the user choose a content type
 - Calls an AI draft generation workflow
 - Sends the generated draft back to Telegram
-- Supports:
-  - Approve
-  - Regenerate
-  - Cancel
-- Publishes approved content to:
-  - LinkedIn
-  - Facebook Page
-- Sends a confirmation message after publishing
+- Lets the user approve, regenerate, or cancel
+- Publishes approved content to LinkedIn or Facebook Page
+- Sends a success confirmation after publishing
 
 ---
 
@@ -110,13 +119,14 @@ Approved posts are published directly to the selected platform using official AP
 - Telegram-first approval flow
 - Human-in-the-loop publishing
 - AI-generated platform-specific drafts
-- Regenerate support for better drafts
+- Regenerate support for improved drafts
+- Cancel option before publishing
 - Direct LinkedIn publishing through HTTP Request node
 - Direct Facebook Page publishing through Graph API
 - Callback-driven workflow logic in n8n
 - Platform-aware routing
 - Publishing confirmation messages
-- Modular workflow design
+- Modular two-workflow design
 
 ---
 
