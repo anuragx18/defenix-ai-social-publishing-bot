@@ -1,0 +1,947 @@
+{
+  "name": "Defenix: Telegram Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        64
+      ],
+      "id": "04208e7c-67b5-453e-934a-3cb27cc311af",
+      "name": "TelegramTrigger",
+      "webhookId": "a8b2a23d-1b19-46f8-9aec-73f98d5e2939",
+      "credentials": {
+        "telegramApi": {
+          "id": "JXNIXubxTry95FTM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.callback_query.message.chat.id}}",
+        "text": "=Platform selected: {{$json.callback_query.data.replace('platform_', '')}} \n\nChoose a content type:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Educational",
+                    "additionalFields": {
+                      "callback_data": "={{ 'type_' + $json.callback_query.data.replace('platform_', '') + '_educational' }}"
+                    }
+                  },
+                  {
+                    "text": "Informational",
+                    "additionalFields": {
+                      "callback_data": "={{ 'type_' + $json.callback_query.data.replace('platform_', '') + '_informational' }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Security",
+                    "additionalFields": {
+                      "callback_data": "={{ 'type_' + $json.callback_query.data.replace('platform_', '') + '_security' }}"
+                    }
+                  },
+                  {
+                    "text": "Awareness",
+                    "additionalFields": {
+                      "callback_data": "={{ 'type_' + $json.callback_query.data.replace('platform_', '') + '_awareness' }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        -368
+      ],
+      "id": "ca0d337b-61cb-4cd6-9a88-439649ed334b",
+      "name": "choose type",
+      "webhookId": "6bb53181-c8e3-4960-b2ea-a57049642e57",
+      "credentials": {
+        "telegramApi": {
+          "id": "JXNIXubxTry95FTM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "45aa5c97-7149-468d-ad87-c3d492362d5d",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "platform_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        -128
+      ],
+      "id": "df10d573-9457-4d64-917e-284c2481a5eb",
+      "name": "IF platform"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8ad91750-ac59-4462-ad83-da9f0f7f8d59",
+              "leftValue": "={{$json.callback_query}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -224,
+        64
+      ],
+      "id": "77babfb0-2932-46a2-a2f5-c6c7340c327c",
+      "name": "IF callback"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.message.chat.id}}",
+        "text": "=Welcome to Defenix Content Bot.\n\nChoose a platform:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "LinkedIn",
+                    "additionalFields": {
+                      "callback_data": "platform_linkedin"
+                    }
+                  },
+                  {
+                    "text": "Facebook",
+                    "additionalFields": {
+                      "callback_data": "platform_facebook"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        256
+      ],
+      "id": "aac4fcc0-59ba-4fd2-a30f-0b824f297b4a",
+      "name": "choose platform",
+      "webhookId": "4899f084-3b0d-474a-815b-653f750584b5",
+      "credentials": {
+        "telegramApi": {
+          "id": "JXNIXubxTry95FTM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3da24ec0-63fd-409b-a168-294209d62b34",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "type_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        256,
+        -16
+      ],
+      "id": "93315f2f-98cc-49a2-b5f5-7964492472f6",
+      "name": "IF post type"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Prepare AI Call\"].json[\"chat_id\"]}}",
+        "text": "={{$json.draft_text + \"\\n\\nDo you want to post this draft?\"}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Approve",
+                    "additionalFields": {
+                      "callback_data": "={{ 'approve_' + $json.platform }}"
+                    }
+                  },
+                  {
+                    "text": "Regenerate",
+                    "additionalFields": {
+                      "callback_data": "={{ 'regenerate_' + $json.platform }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Cancel",
+                    "additionalFields": {
+                      "callback_data": "={{ 'cancel_' + $json.platform }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -288
+      ],
+      "id": "63a5b936-466b-4026-94bc-1aa0254351ab",
+      "name": "draft preview",
+      "webhookId": "1d634b9d-fd04-4381-ab9d-5a5e1537901f",
+      "credentials": {
+        "telegramApi": {
+          "id": "JXNIXubxTry95FTM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b0136a28-f960-4729-8c87-a7103bd72a3d",
+              "leftValue": "={{$json.message.text}}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        272
+      ],
+      "id": "dbf9c64d-fe60-4f27-a3c8-c9e91f893182",
+      "name": "IF /start"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2bed3e64-b28b-4d50-a735-5b0b753f7ede",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "regenerate_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        352
+      ],
+      "id": "6a440c2d-7095-4514-af47-59c499407a95",
+      "name": "IF regenerate"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1902602d-9fd9-4e5e-994b-cfaa01dbc2f1",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "approve_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        112
+      ],
+      "id": "88cbbe19-c6d6-43be-ad9b-de23893a6d57",
+      "name": "IF approve"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.callback_query.message.chat.id}}",
+        "text": "Cancelled.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1408,
+        368
+      ],
+      "id": "4d012e4e-f853-409a-b9dd-c8ab40ee81e8",
+      "name": "cancel message",
+      "webhookId": "22a9437e-ec79-4d3c-a8bb-886e876c6e64",
+      "credentials": {
+        "telegramApi": {
+          "id": "JXNIXubxTry95FTM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Scw8olYY1T0XuOPI",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Scw8olYY1T0XuOPI",
+          "cachedResultName": "Defenix AI Draft Generator"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        -288
+      ],
+      "id": "095070ed-a2b5-4cc9-b2c6-c4ee3ddd286c",
+      "name": "Call 'Defenix AI Draft Generator'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8bbabf07-086d-4fac-81cd-7803433ac36f",
+              "name": "platform",
+              "value": "={{$json.callback_query.data.split('_')[1]}}",
+              "type": "string"
+            },
+            {
+              "id": "d9c1e9ed-af52-460d-8170-b65e850e8346",
+              "name": "post_type",
+              "value": "={{$json.callback_query.data.split('_').slice(2).join('_')}}",
+              "type": "string"
+            },
+            {
+              "id": "f8ec4126-7fa3-4e8e-b5a5-78a9ec6243e4",
+              "name": "chat_id",
+              "value": "={{$json.callback_query.message.chat.id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        -288
+      ],
+      "id": "6e320f65-9b68-4dea-94cd-89345324a2c9",
+      "name": "Prepare AI Call"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3a7d06fa-022f-4f13-a32b-91dc6bf73bc1",
+              "name": "platform",
+              "value": "={{$json.callback_query.data.split('_')[1]}}",
+              "type": "string"
+            },
+            {
+              "id": "7d578f35-1dd3-417c-a7b8-e710a9625540",
+              "name": "chat_id",
+              "value": "={{$json.callback_query.message.chat.id}}",
+              "type": "string"
+            },
+            {
+              "id": "f4e99a51-9618-45fe-a533-02fb8b6caa41",
+              "name": "post_text",
+              "value": "={{$json.callback_query.message.text.split('\\n\\nDo you want to post this draft?')[0]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        32
+      ],
+      "id": "208fd8a1-21b2-4fee-9d65-35edeb52a9f3",
+      "name": "Prepare Posting"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b193d7bf-f1a9-4894-ace4-a4a4b95489d7",
+              "leftValue": "={{$json.platform}}",
+              "rightValue": "linkedin",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        32
+      ],
+      "id": "38133de3-3f1e-4d7e-a2e9-4616a3568ace",
+      "name": "IF platform2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/rest/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "LinkedIn-Version",
+              "value": "202602"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"author\":\"urn:li:person:GhOWqkE7NM\",\"commentary\":\"AI adoption cannot come at the cost of data privacy or security. Defenix delivers a private AI platform that ensures zero data exposure by keeping AI operations on-premises or within a tightly controlled private cloud environment. This approach is essential for organizations handling sensitive or regulated information who need to enforce strict governance and compliance.\\n\\nThe AI Firewall feature provides real-time risk management by monitoring AI activity, classifying data sensitivity, and applying policy-based controls to prevent unauthorized usage. Companies maintain control over which AI models can be accessed and how data flows through public AI services—all without compromising security.\\n\\nFor businesses prioritizing responsible AI use and operational resilience, ensuring privacy and managing AI risk is now achievable without sacrificing innovation. Learn how a privacy-first strategy can protect your organization and empower your teams.\\n\\n#DataPrivacy #AIGovernance #Cybersecurity #EnterpriseAI #RiskManagement\",\"visibility\":\"PUBLIC\",\"distribution\":{\"feedDistribution\":\"MAIN_FEED\",\"thirdPartyDistributionChannels\":[]},\"lifecycleState\":\"PUBLISHED\",\"isReshareDisabledByAuthor\":false}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1424,
+        -128
+      ],
+      "id": "4c301d0e-d40d-4c51-b18d-b6af1b170d4c",
+      "name": "Post to Linkedin",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "yC3hX2xB58dIcaz6",
+          "name": "LinkedIn account"
+        },
+        "oAuth2Api": {
+          "id": "k2y1CbvEM0CobLTd",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v25.0/1003225642876503/feed",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{$json.post_text}}"
+            },
+            {
+              "name": "access_token",
+              "value": "EAAeGekn6k00BQzHZB03oUAZB3YPmkq8Mt6ZBlFj6szdlbrLtSgGNYhm47ZAXaE7oCzui6dduuUcp0pFAJirZAePV1TZAPOZBuzjmg1jQmZCtE2LtLtayQSir4fZBNKZAgfsAG9s8pX1nai84TsbppZBw2EkqMLcQj9fzW94jTIQfEnpgZCufl6jcYrOpZB7oJuR6YFYcasA5S3q9eYi63RMaHadf4gols3vXAsT74XjF2MeYno6QZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1440,
+        128
+      ],
+      "id": "58b918a5-00fd-4101-8794-8226abbd7d29",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Prepare Posting\"].json[\"chat_id\"]}}",
+        "text": "=✅ Post published successfully.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1712,
+        0
+      ],
+      "id": "c905a96f-3d60-4aff-8855-fb8e9394c5f5",
+      "name": "Published message",
+      "webhookId": "8c11340a-e824-4b77-8a99-9a37c3d7d2c4",
+      "credentials": {
+        "telegramApi": {
+          "id": "JXNIXubxTry95FTM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "507da442-0f2d-466c-b51f-79adfa9ed989",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "cancel_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1104,
+        384
+      ],
+      "id": "626b01e9-2b32-494e-b79c-8ad24078b955",
+      "name": "If cancel"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "051ee4bc-f13a-4943-9f35-0869bfd93a53",
+              "name": "draft_text",
+              "value": "={{$json.draft_text}}",
+              "type": "string"
+            },
+            {
+              "id": "a826ba05-88d1-4c26-b3c0-dd5d15c5721a",
+              "name": "platform",
+              "value": "={{$node[\"Prepare AI Call\"].json[\"platform\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "2e7fea77-ae1b-49de-936f-15dad0c04ad3",
+              "name": "chat_id",
+              "value": "={{$node[\"Prepare AI Call\"].json[\"chat_id\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        992,
+        -288
+      ],
+      "id": "2b51b129-080f-42c0-b65e-1ba8d7bd4062",
+      "name": "Draft Context"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "TelegramTrigger": {
+      "main": [
+        [
+          {
+            "node": "IF callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "choose type": {
+      "main": [
+        []
+      ]
+    },
+    "IF platform": {
+      "main": [
+        [
+          {
+            "node": "choose type",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF post type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF callback": {
+      "main": [
+        [
+          {
+            "node": "IF platform",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF /start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF post type": {
+      "main": [
+        [
+          {
+            "node": "Prepare AI Call",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF approve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF /start": {
+      "main": [
+        [
+          {
+            "node": "choose platform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF approve": {
+      "main": [
+        [
+          {
+            "node": "Prepare Posting",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF regenerate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF regenerate": {
+      "main": [
+        [
+          {
+            "node": "Prepare AI Call",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If cancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Defenix AI Draft Generator'": {
+      "main": [
+        [
+          {
+            "node": "Draft Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare AI Call": {
+      "main": [
+        [
+          {
+            "node": "Call 'Defenix AI Draft Generator'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Posting": {
+      "main": [
+        [
+          {
+            "node": "IF platform2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF platform2": {
+      "main": [
+        [
+          {
+            "node": "Post to Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Linkedin": {
+      "main": [
+        [
+          {
+            "node": "Published message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Published message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If cancel": {
+      "main": [
+        [
+          {
+            "node": "cancel message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Context": {
+      "main": [
+        [
+          {
+            "node": "draft preview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cf9e52e3-4ab2-4eda-9275-0c9b6e167f79",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "299b1f09fa2640dff5cc912e7c5a9fd629c31fa9c09354da9177ff9011820590"
+  },
+  "id": "uunOiGuDTSbxK1PE",
+  "tags": []
+}

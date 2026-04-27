@@ -1,0 +1,302 @@
+{
+  "name": "Defenix AI Draft Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "platform"
+            },
+            {
+              "name": "post_type"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "69377dd3-b039-4ba7-b54a-87ba7dc95378",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "https://defenix.ai/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        144
+      ],
+      "id": "6a219d21-3565-4508-bc9e-88083aefc126",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "source_text",
+              "cssSelector": "body"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        144
+      ],
+      "id": "d3ebb7a8-5c38-4a3c-a5c3-a1f9d40dd109",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ce4f040b-9baa-41c2-b393-2fa7fe0750a8",
+              "name": "platform",
+              "value": "=linkedin",
+              "type": "string"
+            },
+            {
+              "id": "e186d0cb-c37e-4da3-8613-26077e0138ad",
+              "name": "post_type",
+              "value": "=security",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        48,
+        0
+      ],
+      "id": "bde2ff22-b032-484d-a455-b98a4a553717",
+      "name": "AI Input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10babbf7-70ff-461f-941b-b1924dd482e0",
+              "name": "platform",
+              "value": "={{$json.platform}}",
+              "type": "string"
+            },
+            {
+              "id": "bc150b7e-fc8e-4ac0-8568-cb8c9bca40df",
+              "name": "post_type",
+              "value": "={{$json.post_type}}",
+              "type": "string"
+            },
+            {
+              "id": "62950eb3-ff50-4a47-bfa8-58261f7f0e01",
+              "name": "source_text",
+              "value": "={{$json.source_text}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        0
+      ],
+      "id": "000fd5f2-b040-4ebc-936f-b6147b7cd33e",
+      "name": "Set Inputs"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        688,
+        0
+      ],
+      "id": "a1f244e3-ebfd-463c-9df0-2861bb1b2fee",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are the social media copywriter for Defenix AI.\n\nYour job is to write exactly one strong social media post draft based primarily on the provided source content.\n\nInputs\nPlatform: {{$json.platform}}\nPost type: {{$json.post_type}}\n\nSource content\n{{$json.source_text}}\n\nBrand context\nDefenix AI focuses on private AI, AI firewall, responsible AI usage, governance, cybersecurity awareness, workflow efficiency, digital transformation, and practical business value.\n\nCore instruction\nUse the source content as the main basis for the post.\nPrioritize real ideas, product themes, and business value found in the source.\nDo not invent unsupported claims.\nDo not repeat the platform name or post type in the final output.\n\nWriting goal\nWrite like a smart human social media manager.\nThe post should feel natural, credible, clear, and specific.\nIt should not sound like AI generated marketing copy or a corporate brochure.\n\nPlatform rules\n\nIf platform is linkedin\nWrite in a professional but natural B2B voice\nStart with a strong opening line\nUse 2 to 3 short paragraphs\nWrite 120 to 180 words\nMake it feel thoughtful and insight driven\nFocus on business value, operational impact, governance, privacy, security, or efficiency\nEnd with a soft professional call to action\n\nIf platform is facebook\nWrite in a conversational and approachable voice\nUse 1 to 2 short paragraphs\nWrite 60 to 110 words\nKeep it easy to read and direct\nFocus on one clear point only\nEnd with a simple natural call to action\n\nPost type rules\n\nIf post_type is educational\nTeach one useful lesson or idea\nMake the takeaway practical and clear\n\nIf post_type is informational\nShare one clear insight, update, or explanation\nPrioritize clarity over persuasion\n\nIf post_type is security\nFocus on awareness, prevention, privacy, governance, practical risk, or safe AI usage\nKeep the message useful and realistic\n\nIf post_type is awareness\nHighlight an important challenge, shift, or opportunity people should notice\nMake the reader understand why it matters\n\nQuality rules\nBase the post on one specific angle from the source content\nDo not make the post vague or generic\nDo not overexplain\nKeep the writing human, simple, and confident\nMake the post feel publishable by a real Defenix AI brand page\n\nHard rules\nDo not use emojis\nDo not use markdown\nDo not use bullet points\nDo not use quotation marks around the answer\nDo not use colons in the final post\nDo not use semicolons in the final post\nDo not use any dash character in the final post\nDo not use hashtags inside the body text\nDo not use phrases like in today’s digital landscape, unlock, revolutionize, leverage, seamless, robust, cutting edge, game changer, or safeguard your future\nDo not sound dramatic, salesy, or inflated\n\nOutput format\nReturn only the final post text\nAt the very end, add 3 to 5 relevant professional hashtags on one line"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1136,
+        0
+      ],
+      "id": "20b33a12-43d5-4389-9d38-69257067b0a9",
+      "name": "Generate Draft",
+      "credentials": {
+        "openAiApi": {
+          "id": "Iii8qpdVy6mQM1Jf",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "308844f0-318c-4873-99e0-77bc8fed2c63",
+              "name": "draft_text",
+              "value": "={{$json.output[0].content[0].text}}",
+              "type": "string"
+            },
+            {
+              "id": "febb746d-bce2-41b3-869d-bc4dfd8820b9",
+              "name": "chat_id",
+              "value": "={{$json.chat_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1472,
+        0
+      ],
+      "id": "6efff462-2a26-4129-b0c7-99b0466f6a6c",
+      "name": "Final AI Output"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Input": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Set Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Inputs": {
+      "main": [
+        [
+          {
+            "node": "Generate Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Draft": {
+      "main": [
+        [
+          {
+            "node": "Final AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d5877e0a-902c-40b2-a472-4075c76c941a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "299b1f09fa2640dff5cc912e7c5a9fd629c31fa9c09354da9177ff9011820590"
+  },
+  "id": "Scw8olYY1T0XuOPI",
+  "tags": []
+}
